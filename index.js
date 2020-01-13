@@ -16,8 +16,6 @@ const defaultState = {
     size: defaultBrushSize
 };
 
-const currentPoints = []; // local history
-
 const state = {
     _color: defaultColor,
     _size: defaultBrushSize,
@@ -104,7 +102,6 @@ function onDraw(e, type) {
     const y = e.clientY - canvas.offsetTop;
     drawPoint({ x, y, type });
 
-    addPoint(currentPoints, x, y, type);
     addPoint(state.points, x, y, type);
 }
 
@@ -196,7 +193,9 @@ function refreshState(newState) {
     else
         newState = JSON.parse(newState);
     clear();
-    ["color", "size", "points"].forEach(prop => state[prop] = newState[prop]);
+    state.color = newState.color;
+    state.size = newState.size;
+    state.points = state.points.concat(newState.points);
 }
 
 function onStorageChange(e) {
